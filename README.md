@@ -6,5 +6,6 @@ go build
 2、执行exe文件就可以了
 <br/>
 3、使用postman测试（GET方式）
+<br/>
 http://localhost:60990/test/auth?username=test001
 
