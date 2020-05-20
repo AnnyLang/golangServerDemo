@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -14,5 +13,16 @@ func CheckLogin(username string) string {
 		fmt.Println("find err:", errFind)
 	}
 	fmt.Println("find result is :", res["humanName"])
+	fmt.Println("result is:",toString(res))
 	return res["humanName"]
+}
+
+func toString(data map[string]string)string{
+	var txt=""
+	if data!=nil{
+		for key,value:=range data{
+			txt+=key+"="+value+","
+		}
+	}
+	return txt
 }
