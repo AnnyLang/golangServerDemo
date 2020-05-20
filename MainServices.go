@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"encoding/json"
 	"gopkg.in/mgo.v2/bson"
 )
 
+//how to use LINQ to return map object
 func CheckLogin(username string) string {
 	coll := authCollection
 	res := make(map[string]string, 0)
@@ -13,16 +15,57 @@ func CheckLogin(username string) string {
 		fmt.Println("find err:", errFind)
 	}
 	fmt.Println("find result is :", res["humanName"])
-	fmt.Println("result is:",toString(res))
+	fmt.Println("result is:", toString(res))
+	CheckLoginObj(username)
 	return res["humanName"]
 }
 
-func toString(data map[string]string)string{
-	var txt=""
-	if data!=nil{
-		for key,value:=range data{
-			txt+=key+"="+value+","
+//how to use LINQ to return entity object
+func CheckLoginObj(username string) []AuthUserInfo {
+	coll := authCollection
+	res := make([]AuthUserInfo, 0)
+	errFind := coll.Find(bson.M{"humanName": username}).All(&res)
+	if errFind != nil {
+		fmt.Println("find err:", errFind)
+	}
+	if len(res)>0{
+		//for i,item 		==>for array 
+		//for key,value		==>for map
+		//for i=0;i<5;i++ 	==>for both
+		//if you do not need i or key,you can use this formate :>for _,value{}
+		for _,item :=range res{
+			if len(item.HumanGroup)>0{
+				//func json.Marshal return two values:>[value,err] 
+				jsonStr,err:=json.Marshal(item)
+				if err!=nil{
+					fmt.Println(err)
+				}
+				fmt.Println("item is not nil",string(jsonStr))
+			}
+			fmt.Println("parseTo:" + parseToString(res[0]))
 		}
+	}
+	return res
+}
+
+//map[keyType]valueType
+//map[string]struct same as map(string,object) in java
+func toString(data map[string]string) string {
+	var txt = ""
+	if data != nil {
+		for key, value := range data {
+			txt += key + "=" + value + ","
+		}
+	}
+	return txt
+}
+
+func parseToString(userinfo AuthUserInfo) string {
+	var txt = ""
+	if len(userinfo.HumanName) > 0 {
+		txt += "username=" + userinfo.HumanName + ","
+		txt += "password=" + userinfo.Passwd + ","
+		txt += "description=" + userinfo.Info
 	}
 	return txt
 }
