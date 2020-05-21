@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"encoding/json"
+	// "context"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -46,6 +47,37 @@ func CheckLoginObj(username string) []AuthUserInfo {
 		}
 	}
 	return res
+}
+
+func login(username string,password string)AuthUserInfo{
+	fmt.Println("username="+username+","+"password="+password)
+	coll:=authCollection
+	res:=AuthUserInfo{}
+	errFind:=coll.Find(bson.M{"humanName":username,"passwd":password}).One(&res)
+	if errFind!=nil{
+		fmt.Println(errFind)
+	}
+	fmt.Println(res.HumanName+","+res.Passwd)
+	return res
+}
+
+func insertNewUser(user AuthUserNew){
+    docD := bson.D{
+        {"name", "Project"},
+        {"description", "Project Tasks"},
+    }
+    	coll:=authCollection
+		err:=coll.Insert(docD)
+		if err!=nil{
+			fmt.Println(err)
+		}
+    
+}
+
+type Category struct {
+    Id          bson.ObjectId `bson:"_id,omitempty"`
+    Name        string
+    Description string
 }
 
 //map[keyType]valueType
