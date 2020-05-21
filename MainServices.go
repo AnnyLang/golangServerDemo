@@ -1,9 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
+
 	// "context"
+
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -29,19 +31,19 @@ func CheckLoginObj(username string) []AuthUserInfo {
 	if errFind != nil {
 		fmt.Println("find err:", errFind)
 	}
-	if len(res)>0{
-		//for i,item 		==>for array 
+	if len(res) > 0 {
+		//for i,item 		==>for array
 		//for key,value		==>for map
 		//for i=0;i<5;i++ 	==>for both
 		//if you do not need i or key,you can use this formate :>for _,value{}
-		for _,item :=range res{
-			if len(item.HumanGroup)>0{
-				//func json.Marshal return two values:>[value,err] 
-				jsonStr,err:=json.Marshal(item)
-				if err!=nil{
+		for _, item := range res {
+			if len(item.HumanGroup) > 0 {
+				//func json.Marshal return two values:>[value,err]
+				jsonStr, err := json.Marshal(item)
+				if err != nil {
 					fmt.Println(err)
 				}
-				fmt.Println("item is not nil",string(jsonStr))
+				fmt.Println("item is not nil", string(jsonStr))
 			}
 			fmt.Println("parseTo:" + parseToString(res[0]))
 		}
@@ -49,35 +51,40 @@ func CheckLoginObj(username string) []AuthUserInfo {
 	return res
 }
 
-func login(username string,password string)AuthUserInfo{
-	fmt.Println("username="+username+","+"password="+password)
-	coll:=authCollection
-	res:=AuthUserInfo{}
-	errFind:=coll.Find(bson.M{"humanName":username,"passwd":password}).One(&res)
-	if errFind!=nil{
+func login(username string, password string) AuthUserInfo {
+	fmt.Println("username=" + username + "," + "password=" + password)
+	coll := authCollection
+	res := AuthUserInfo{}
+	errFind := coll.Find(bson.M{"humanName": username, "passwd": password}).One(&res)
+	if errFind != nil {
 		fmt.Println(errFind)
 	}
-	fmt.Println(res.HumanName+","+res.Passwd)
+	fmt.Println(res.HumanName + "," + res.Passwd)
 	return res
 }
 
-func insertNewUser(user AuthUserNew){
-    docD := bson.D{
-        {"name", "Project"},
-        {"description", "Project Tasks"},
-    }
-    	coll:=authCollection
-		err:=coll.Insert(docD)
-		if err!=nil{
-			fmt.Println(err)
-		}
-    
+func insertNewUser(user AuthUserNew) {
+	// docD := bson.D{
+	// 	{"name", "Project"},
+	// 	{"description", "Project Tasks"},
+	// }
+	// coll := authCollection
+	// err := coll.Insert(docD)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	coll := authCollection
+	err := coll.Insert(user)
+	if err != nil {
+		fmt.Println(err)
+	}
+
 }
 
 type Category struct {
-    Id          bson.ObjectId `bson:"_id,omitempty"`
-    Name        string
-    Description string
+	Id          bson.ObjectId `bson:"_id,omitempty"`
+	Name        string
+	Description string
 }
 
 //map[keyType]valueType

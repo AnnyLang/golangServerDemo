@@ -15,11 +15,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	
+
 	// "github.com/go-redis/redis"
 	// uuid "github.com/satori/go.uuid"
 	mgo "gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
+	// "gopkg.in/mgo.v2/bson"
 )
 
 const (
@@ -42,7 +42,7 @@ const (
 	server_api_level_manager_add = "/mng/add"
 	server_api_level_manager_del = "/mng/del"
 	server_api_level_manager_get = "/mng/get"
-	
+
 	Good RespSign = iota
 	Bad  RespSign = iota
 )
@@ -72,31 +72,31 @@ type DataStore struct {
 }
 
 type AuthUserInfo struct {
-	AuthLevel    string          `bson:"authLevel" json:"authLevel"`
+	AuthLevel     string          `bson:"authLevel" json:"authLevel"`
 	HumanName     string          `bson:"humanName" json:"humanName"`
 	HumanGroup    string          `bson:"humanGroup" json:"humanGroup"`
 	Passwd        string          `bson:"passwd" json:"passwd"`
 	Info          string          `bson:"info" json:"info"`
 	CustomContext []CustomContext `bson:"customContext" json:"customContext"`
-	DeadOrAlive   int	          `bson:"deadOrAlive" json:"deadOrAlive"`
-	BirthTime     int64	          `bson:"birthTime" json:"birthTime"`
+	DeadOrAlive   int             `bson:"deadOrAlive" json:"deadOrAlive"`
+	BirthTime     int64           `bson:"birthTime" json:"birthTime"`
 }
 
-type AuthUserNew struct{
-	Id            bson.ObjectId   `bson:"_id,omitempty"`
-	AuthLevel     int         	  `bson:"authLevel" json:"authLevel"`
-	HumanName     string          `bson:"humanName" json:"humanName"`
-	HumanGroup    string          `bson:"humanGroup" json:"humanGroup"`
-	Passwd        string          `bson:"passwd" json:"passwd"`
-	Info          string          `bson:"info" json:"info"`
-	DeadOrAlive   int	          `bson:"deadOrAlive" json:"deadOrAlive"`
+type AuthUserNew struct {
+	// Id          bson.ObjectId `bson:"_id,omitempty" json:"_id"`
+	AuthLevel   int    `bson:"authLevel" json:"authLevel"`
+	HumanName   string `bson:"humanName" json:"humanName"`
+	HumanGroup  string `bson:"humanGroup" json:"humanGroup"`
+	Passwd      string `bson:"passwd" json:"passwd"`
+	Info        string `bson:"info" json:"info"`
+	DeadOrAlive int    `bson:"deadOrAlive" json:"deadOrAlive"`
 }
 
 type CustomContext struct {
 	ParamName  string `bson:"paramName" json:"paramName"`
 	ParamType  string `bson:"paramType" json:"paramType"`
 	ParamValue string `bson:"paramValue" json:"paramValue"`
-	ShowOrNot  int	  `bson:"showOrNot" json:"showOrNot"`
+	ShowOrNot  int    `bson:"showOrNot" json:"showOrNot"`
 }
 
 type CommonDataFeed struct {
@@ -258,7 +258,7 @@ func SendToHellCommonHead(name string, sendback string, status int, w http.Respo
 //Send back with common headers. no custom.
 func SendBackCommonHead(back string, status int, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json;charset=UTF-8")
-		w.WriteHeader(status)
+	w.WriteHeader(status)
 	w.Write([]byte(back))
 }
 
